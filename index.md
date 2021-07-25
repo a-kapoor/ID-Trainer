@@ -1,3 +1,14 @@
+_Repo in github_
+
+[![cms-egamma - ID-Trainer](https://img.shields.io/static/v1?label=cms-egamma&message=ID-Trainer&color=blue&logo=github)](https://github.com/cms-egamma/ID-Trainer)
+[![forks - ID-Trainer](https://img.shields.io/github/forks/cms-egamma/ID-Trainer?style=social)](https://github.com/cms-egamma/ID-Trainer)
+
+_Current Tag_
+
+[![GitHub tag](https://img.shields.io/github/tag/cms-egamma/ID-Trainer?include_prereleases=&sort=semver)](https://github.com/cms-egamma/ID-Trainer/releases/)
+[![License](https://img.shields.io/badge/License-Apache--2.0_License_-blue)](#license)
+
+
 |Currently supports||
 |:---|---|
 |**Binary-classification** (currently using XGBoost and DNN) |Examples: DY vs ttbar, DY prompt vs DY fake, good electrons vs bad electrons|
