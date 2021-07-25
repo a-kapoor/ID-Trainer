@@ -30,12 +30,12 @@
 |Correlation plots|
 |Trained models (h5 for DNN / pkl for XGBoost)|
 
-#### Optional outputs
-
-1) Threshold values of scores for chosen working points
-2) Efficiency vs pT and Efficiency vs eta plots for all classes
-3) Reweighting plots for pT and eta
-4) Comparison of new ID performance with benchmark ID flags
+|**Optional outputs**|
+|---|
+|1) Threshold values of scores for chosen working points|
+|2) Efficiency vs pT and Efficiency vs eta plots for all classes|
+|3) Reweighting plots for pT and eta|
+|4) Comparison of new ID performance with benchmark ID flags|
 
 # Primary intended use: For ID Training
 
