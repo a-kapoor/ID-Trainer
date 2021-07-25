@@ -3,32 +3,32 @@
 > A simple config-based tool for high-energy-physics machine learning tasks.
 
 
-Currently supports:
-* **Binary-classification** (currently using XGBoost and DNN)
-Examples: DY vs ttbar, DY prompt vs DY fake
-* **Multi-sample classification** (currently using XGBoost and DNN)
-Examples: DY vs (ttbar and QCD)
-* **Multi-class classification** (currently using XGBoost and DNN)
-Examples: DY vs ttbar vs QCD
+
+|Currently supports||
+|:---|---|
+|**Binary-classification** (currently using XGBoost and DNN) |Examples: DY vs ttbar, DY prompt vs DY fake, good electrons vs bad electrons|
+|**Multi-sample classification** (currently using XGBoost and DNN) |Examples: DY vs (ttbar and QCD)|
+|**Multi-class classification** (currently using XGBoost and DNN) |Examples: DY vs ttbar vs QCD, , good photons vs bad photons|
 
 
-Salient features:
-1) Parallel reading of root files (using DASK)
-2) Runs on flat ntuples (even NanoAODs) out of the box
-3) Adding multiple MVAs is very trivial (Subject to available computing power)
-4) Cross-section and pt-eta reweighting can be handled together
-5) Multi-Sample training possible
-6) Multi-Class training possible
-7) Ability to customize thresholds
+|**Salient features:**|
+|---|
+|Parallel reading of root files (using DASK)|
+|Runs on flat ntuples (even NanoAODs) out of the box|
+|Adding multiple MVAs is very trivial (Subject to available computing power)|
+|Cross-section and pt-eta reweighting can be handled together|
+|Multi-Sample training possible|
+|Multi-Class training possible|
+|Ability to customize thresholds|
 
-### What will be the output of the trainer:
-
-1) Feature distributions
-2) Statistics in training and testing
-3) ROCs, loss plots, MVA scores
-4) Confusion Matrices
-5) Correlation plots
-6) Trained models (h5 or pkl files)
+|**What will be the output of the trainer:**|
+|---|
+|Feature distributions|
+|Statistics in training and testing|
+|ROCs, loss plots, MVA scores|
+|Confusion Matrices|
+|Correlation plots|
+|Trained models (h5 for DNN / pkl for XGBoost)|
 
 #### Optional outputs
 
