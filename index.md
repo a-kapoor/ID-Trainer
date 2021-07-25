@@ -39,6 +39,8 @@ Salient features:
 
 # Primary intended use: For ID Training
 
+![WhatisID](WhatisID.png)
+
 # Setting up
 
 #### Clone
