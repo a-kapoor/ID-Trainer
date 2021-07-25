@@ -101,16 +101,16 @@ from tensorflow.keras.callbacks import EarlyStopping
 # All the Parameters
 
 | Parameters |Type| Description|
-| --------------- | ----------------| ---------------- |
+|---------------|----------------|---|
 | `OutputDirName` |string| All plots, models, config file will be stored in this directory. This will be automatically created. If it already exists, it will overwrite everything if you run it again with the same `OutputDirName`|
 | `branches` |list of strings| Branches to read (Should be in the input root files). Only these branches can be later used for any purpose. The '\*' is useful for selecting pattern-based branches. In principle one can do ``` branches=["*"] ```, but remember that the data loading time increases, if you select more branches|
 |`SaveDataFrameCSV`|boolean| If True, this will save the data frame as a parquet file and the next time you run the same training with different parameters, it will be much faster|
 |`loadfromsaved`|boolean| If root files and branches are the same as previous training and SaveDataFrameCSV was True, you can assign this as `True`, and data loading time will reduce significantly. Remember that this will use the same output directory as mentioned using `OutputDirName`, so the data frame should be present there|
-|`Classes` | list of strings | Two or more classes possible. For two classes the code will do a binary classification. For more than two classes Can be anything but samples will be later loaded under this scheme. Example: `Classes=['DY','TTBar']` or `Classes=['Class1','Class2','Class3']`. The order is important if you want to make an ID. In case of two classes, the first class has to be a Signal of interest. The second has to be a background. In multiclass, it does not matter which order one is using, but it is highly recommended that the first class is signal, if it is known. |
+|`Classes` | list of strings | Two or more classes possible. For two classes the code will do a binary classification. For more than two classes Can be anything but samples will be later loaded under this scheme. Example: `Classes=['DY','TTBar']` or `Classes=['Class1','Class2','Class3']`. The order is important if you want to make an ID. In case of two classes, the **first class has to be a Signal of interest**. The second has to be a background. In multiclass, it does not matter which order one is using, but it is highly recommended that the first class is signal, if it is known. |
 |`ClassColors`|list of strings|Colors for `Classes` to use in plots. Standard python colors work!|
 |`Tree`| string |Location of the tree inside the root file|
-|`processes`| list of dictionaries| You can add as many process files as you like and assign them to a specific class. For example WZ.root and TTBar.root could be 'Background' class and DY.root could be 'Signal' or both 'Signal and 'background' can come from the same root file. In fact you can have, as an example: 4 classes and 5 root files. The Trainer will take care of it at the backend. Look at the sample config below to see how processes are added. It is a list of dictionaries, with one example dictionary looking like this <pre lang="python"> {'Class':'IsolatedSignal', <br /> 'path':['./DY.root','./Zee.root'], 'xsecwt': 1,<br> 'selection':'(ele_pt > 5) & (abs(scl_eta) < 1.442) & (abs(scl_eta) < 2.5) & (matchedToGenEle==1)'} </pre>   |
-|`MVAs`|list of dictionaries| MVAs to use. You can add as many as you like: MVAtypes XGB and DNN are keywords, so names can be XGB_new, DNN_old etc, but keep XGB and DNN in the names (That is how the framework identifies which algo to run). Look at the sample config below to see how MVAs are added. |
+|`processes`| list of process dictionaries| You can add as many process files as you like and assign them to a specific class. For example WZ.root and TTBar.root could be 'Background' class and DY.root could be 'Signal' or both 'Signal and 'background' can come from the same root file. In fact you can have, as an example: 4 classes and 5 root files. The Trainer will take care of it at the backend. Look at the sample config below to see how processes are added. It is a list of process dictionaries. **Each process has four options: `Class`, `path`, `xsecwt`,`selection`**, with one example dictionary looking like this ``` {'Class':'IsolatedSignal', 'path':['./DY.root','./Zee.root'], 'xsecwt': 1, 'selection':'(ele_pt > 5) & (abs(scl_eta) < 1.442) & (abs(scl_eta) < 2.5) & (matchedToGenEle==1)'} ```. At the end of the config adding processes in described in much detail.   |
+|`MVAs`|list of dictionaries| MVAs to use. You can add as many as you like: MVAtypes XGB and DNN are keywords, so names can be XGB_new, DNN_old etc, but keep XGB and DNN in the names, **and no space please** ( (That is how the framework identifies which algo to run). Look at the sample config below to see how MVAs are added. At the end of the config adding MVAs in described in much detail.|
 
 #### Optional Parameters
 
@@ -222,3 +222,7 @@ MVAs = [
 ]
 
 ```
+
+## More on how to add processes and MVAs along with neat functionalities (The most important part)
+
+Section coming soon.
