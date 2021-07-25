@@ -1,9 +1,3 @@
-# ID-Trainer
-
-> A simple config-based tool for high-energy-physics machine learning tasks.
-
-
-
 |Currently supports||
 |:---|---|
 |**Binary-classification** (currently using XGBoost and DNN) |Examples: DY vs ttbar, DY prompt vs DY fake, good electrons vs bad electrons|
