@@ -1,4 +1,4 @@
-_Repo in github_
+_View on github_
 
 [![cms-egamma - ID-Trainer](https://img.shields.io/static/v1?label=cms-egamma&message=ID-Trainer&color=blue&logo=github)](https://github.com/cms-egamma/ID-Trainer)
 [![forks - ID-Trainer](https://img.shields.io/github/forks/cms-egamma/ID-Trainer?style=social)](https://github.com/cms-egamma/ID-Trainer)
