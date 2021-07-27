@@ -33,7 +33,7 @@ _Current Tag_
 |ROCs, loss plots, MVA scores|
 |Confusion Matrices|
 |Correlation plots|
-|Trained models (h5 for DNN / pkl for XGBoost)|
+|Trained models (h5 (and pb) for DNN / pkl for XGBoost)|
 
 |**Optional outputs**|
 |---|
