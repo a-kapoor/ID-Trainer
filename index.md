@@ -57,7 +57,7 @@ git clone -b v1.4.1 --depth 1 https://github.com/cms-egamma/ID-Trainer.git
 
 #### Clone using ssh
 ```
-git clone -b v1.4 --depth 1 git@github.com:cms-egamma/ID-Trainer.git
+git clone -b v1.4.1 --depth 1 git@github.com:cms-egamma/ID-Trainer.git
 ```
 
 #### Setup
