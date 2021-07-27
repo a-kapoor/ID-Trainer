@@ -47,11 +47,7 @@ _Current Tag_
 ![WhatisID](WhatisID.png)
 
 # Setting up
-
-<details>
-<summary>**Click here for setup instructions**</summary>
-
-    
+ 
 #### Clone
 ```
 git clone -b v1.4 --depth 1 git@github.com:cms-egamma/ID-Trainer.git
@@ -85,8 +81,6 @@ python Trainer.py NewTrainConfig #without the .py
 
 The Trainer will read the settings from the config file and run training
 
-</details>
-    
 ### Projects where the framework has been helpful
 
 ||
@@ -156,9 +150,6 @@ from tensorflow.keras.callbacks import EarlyStopping
 |`modifydf`|function| In your config, you can add a function with this exact name `modifydf` which accepts a pandas dataframe and manipulates it and then returns 0. Using this you can add new variables or modify already present variables. Example: `def modifydf(df): df['A']=df[X]+df[Y]; return 0;` This will add a new branch named 'A'.| Not activated until defined|
     
  There is a lof things you can do with a modifydf.
- 
-<details>
-<summary>**Click here for examples**</summary>
 
 ```python
     
@@ -207,11 +198,8 @@ def modifydf(df):
 
 
 ```
-</details>
     
 ### A sample config for running XGboost and DNN together
-<details>
-<summary>Click here for sample config</summary>
     
 ```python
 
@@ -294,7 +282,6 @@ MVAs = [
 ]
 
 ```
-</details>
 
 ## More on how to add processes and MVAs along with neat functionalities
 
@@ -329,9 +316,6 @@ The `selection` argument will take `&` and `|` for `and` and `or`. You can place
 ### MVAs
 
 MVAs to use. You can add as many as you like: MVAtypes XGB and DNN are keywords, so names can be XGB_new, DNN_old etc, but keep XGB and DNN in the names, **and no space please** ( (That is how the framework identifies which algo to run). Look at the sample config below to see how MVAs are added. At the end of the config adding MVAs in described in much detail.
-    
-<details>
-<summary>Examples</summary>
     
 ```python
 
@@ -375,4 +359,3 @@ MVAs = [
 ]
 
 ```
-</details>
