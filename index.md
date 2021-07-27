@@ -160,7 +160,7 @@ def modifydf(df):
     
     #Example: Simple additions
     
-    df["leptonpT"]=df["muonpt"]+df["electronpt"]
+    df["sumleptonpT"]=df["muonpt"]+df["electronpt"]
     
     #Example: Check if all selections are passed and store as new variables
     
