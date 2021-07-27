@@ -156,9 +156,9 @@ from tensorflow.keras.callbacks import EarlyStopping
 
 | Function         |Type| Description| Default value|
 | --------------- | ----------------| ---------------- | ---------------- |
-|`modifydf`|function| In your config, you can add a function with this exact name `modifydf` which accepts a pandas dataframe and manipulates it and then returns 0. | Not activated until defined|
+|`modifydf`|function| In your config, you can add a function with this exact name `modifydf` which accepts a pandas dataframe and manipulates it and then returns the dataframe. | Not activated until defined|
 
-Using this you can add new variables or modify already present variables. A very simple example: `def modifydf(df): df['A']=df[X]+df[Y]; return 0;` This will add a new branch named 'A'.
+Using this you can add new variables or modify already present variables. A very simple example: `def modifydf(df): df['A']=df[X]+df[Y]; return df;` This will add a new branch named 'A'.
     
  There are lot of things you can do with a modifydf.
 
@@ -206,7 +206,7 @@ def modifydf(df):
                df.loc[ind,'GenToppt'] = row.Gen_pt[partind]
                df.loc[ind,'GenTopeta'] = row.Gen_eta[partind] 
          
-    return 0;
+    return df
     
 
 
