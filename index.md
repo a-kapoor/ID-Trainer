@@ -152,7 +152,7 @@ from tensorflow.keras.callbacks import EarlyStopping
 
 Using this you can add new variables or modify already present variables. A very simple example: `def modifydf(df): df['A']=df[X]+df[Y]; return 0;` This will add a new branch named 'A'.
     
- There is a lof things you can do with a modifydf.
+ There are lot of things you can do with a modifydf.
 
 ```python
     
