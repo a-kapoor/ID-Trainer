@@ -48,10 +48,18 @@ _Current Tag_
 
 # Setting up
  
-#### Clone
+#### Clone using https
+
+```
+git clone -b v1.4 --depth 1 https://github.com/cms-egamma/ID-Trainer.git
+```
+### Or
+
+#### Clone using ssh
 ```
 git clone -b v1.4 --depth 1 git@github.com:cms-egamma/ID-Trainer.git
 ```
+
 #### Setup
 In principle, you can set this up on your local computer by installing packages via conda/pip, but if possible please set up a cvmfs release.
 
