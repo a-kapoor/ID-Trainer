@@ -48,19 +48,23 @@ _Current Tag_
 
 # Setting up
 
+<details>
+<summary>**Click here for setup instructions**</summary>
+
+    
 #### Clone
 ```
-git clone https://github.com/cms-egamma/ID-Trainer.git
+git clone -b v1.4 --depth 1 git@github.com:cms-egamma/ID-Trainer.git
 ```
 #### Setup
-In principle, you can set this up on your local computer by installing packages via conda/pip, but when possible please set up a cvmfs release.
+In principle, you can set this up on your local computer by installing packages via conda/pip, but if possible please set up a cvmfs release.
 
-#### Run on CPUs only
+#### When running on CPUs only
 
 Use LCG 97python3 and you will have all the dependencies! (Tested at lxplus and SWAN)
 `source /cvmfs/sft.cern.ch/lcg/views/LCG_97python3/x86_64-centos7-gcc8-opt/setup.sh`
 
-#### Run on GPUs
+#### When running with GPUs
 
 The code can also transparently use a GPU, if a GPU card is available. Although, all packages need to be setup correctly.
 For GPU in tensorflow, you can use the LCG_97py3cu10 cvmfs release:
@@ -81,20 +85,25 @@ python Trainer.py NewTrainConfig #without the .py
 
 The Trainer will read the settings from the config file and run training
 
-Projects where the framework has been helpful
+</details>
+    
+### Projects where the framework has been helpful
 
-1) Run-3 Electron MVA ID
-2) Run-3 PF Electron ID
-3) Run-3 PF Photon ID
-4) Close photon analysis
-5) H->eeg analysis
+||
+|--|
+|1) Run-3 Electron MVA ID|
+|2) Run-3 PF Electron ID|
+|3) Run-3 PF Photon ID|
+|4) Close photon analysis|
+|5) H->eeg analysis|
+|6) Resolved and merged ID|
 
 ##########################################
 
 ### The different parts of the config
 
 #### Imports
-This is needed to use numpy and tensorflow. You can leave it as is.
+This is needed to use numpy and tensorflow. If you are using anything special within the config, you might have to add more imports.
 ```python
 import numpy as np
 from tensorflow.keras.models import Sequential
@@ -123,6 +132,7 @@ from tensorflow.keras.callbacks import EarlyStopping
 
 | Parameters          |Type| Description| Default value|
 | --------------- | ----------------| ---------------- | ---------------- |
+|`CMSLabel`|list of two strings| Left and Right titles for plots. Useful for adding things like "CMS Preliminary" and "13 TeV" on top of the plots. example: `CMSLabel=["CMS Preliminary","13 TeV"]` | True|
 |`Spectators`|list of features|Spectator variables which are plotted but not used for training|empty|
 |`SpectatorBins`|list of binnings|Binning scheme for spectator variables which are plotted but not used for training|empty|
 |`Reweighing`|boolean| This is independent of xsec reweighing (this reweighing will be done after taking into account xsec weight of multiple samples). Even if this is 'False', xsec reweighting will always be done. To switch off xsec reweighting, you can just assign the xsec weight is `1`| False |
@@ -140,15 +150,69 @@ from tensorflow.keras.callbacks import EarlyStopping
 |`ROClogplot`|boolean| If true, ROC is plotted in log scale| False|
 |`Multicore`|boolean| If True all CPU cores available are used XGB | True|
 
-#### How to add variables? or modify the ones that are in tree
-
+#### How to add more variables (that are a not directly in the trees)? or modify the ones that are in tree
 | Function         |Type| Description| Default value|
 | --------------- | ----------------| ---------------- | ---------------- |
 |`modifydf`|function| In your config, you can add a function with this exact name `modifydf` which accepts a pandas dataframe and manipulates it and then returns 0. Using this you can add new variables or modify already present variables. Example: `def modifydf(df): df['A']=df[X]+df[Y]; return 0;` This will add a new branch named 'A'.| Not activated until defined|
+    
+ There is a lof things you can do with a modifydf.
+ 
+<details>
+<summary>**Click here for examples**</summary>
+
+```python
+    
+def modifydf(df):
+    
+    #Example: Simple additions
+    
+    df["leptonpT"]=df["muonpt"]+df["electronpt"]
+    
+    #Example: Check if all selections are passed and store as new variables
+    
+    for ind, event in df.iterrows():
+    print(f'Event {ind}')
+    for Muonpt, Muoneta in zip(event.Muon_pt,event.Muon_eta):
+        #print(f'Muons: {Muonpt} and {Muoneta}')
+        if (Muonpt>26) and (abs(Muoneta)<2.1):
+            print(f'Muons passed')
+            df.loc[ind,'MuonBit']=1
+            break
+    for Jetpt, Jeteta in zip(event.Jet_pt,event.Jet_eta):
+        #print(f'Jets: {Jetpt} and {Jeteta}')
+        if (Jetpt>30) and (abs(Jeteta)<2.4):
+            print(f'jets passed')
+            df.loc[ind,'JetBit']=1
+            break
+    for JetpfCombinedInclusiveSecondaryVertexV2BJetTags in event.Jet_pfCombinedInclusiveSecondaryVertexV2BJetTags:
+        if JetpfCombinedInclusiveSecondaryVertexV2BJetTags>0.627:
+            print(f'pf also passed')
+            df.loc[ind,'pfBit']=1
+            break
+    continue 
+    
+    #Example: Loop over gen particles
+    
+    df['GenToppt']=-999
+    df['GenTopeta']=-999
+
+    for ind, row in df.iterrows():
+        #print(f'Top pTs for Event {ind}')
+        for partind, part in enumerate(row.Gen_pdg_id):
+            if abs(row.Gen_pdg_id[partind])==6 and row.Gen_numDaught[partind]==2:
+               #print(f'Found top at {partind} with pT {row.Gen_pt[partind]} GeV and mother ID {row.Gen_motherpdg_id[partind]} with {row.Gen_numDaught[partind]} daughters')
+               df.loc[ind,'GenToppt'] = row.Gen_pt[partind]
+               df.loc[ind,'GenTopeta'] = row.Gen_eta[partind] 
+    
 
 
+```
+</details>
+    
 ### A sample config for running XGboost and DNN together
-
+<details>
+<summary>Click here for sample config</summary>
+    
 ```python
 
 
@@ -172,6 +236,7 @@ branches=["scl_eta","ele*","matched*","EleMVACats",'passElectronSelection','Fall
 SaveDataFrameCSV,loadfromsaved=True,False #If loadfromsaved=True, dataframe stored in OutputDirName will be read
 
 Classes,ClassColors = ['IsolatedSignal','NonIsolated'],['#377eb8', '#ff7f00']
+#Remeber: For binary classification, first class of the Classes argument should be signal, otherwise, plots might not make sense.
 
 processes=[
     {'Class':'IsolatedSignal','path':['./DY.root','./Zee.root'],
@@ -229,7 +294,85 @@ MVAs = [
 ]
 
 ```
+</details>
 
-## More on how to add processes and MVAs along with neat functionalities (The most important part)
+## More on how to add processes and MVAs along with neat functionalities
 
-Section coming soon.
+### Processes
+
+If you add a dictionary like this in process, it will add the selected branches from the root files and assign them to specified class.
+```python
+   
+   {'Class':'IsolatedSignal','path':['./DY.root','./Zee.root'],
+     'xsecwt': 1, #can be a number or a branch name, like 'weight' #Will go into training
+     'selection':'(ele_pt > 5) & (abs(scl_eta) < 1.442) & (abs(scl_eta) < 2.5) & (matchedToGenEle==1)', #selection 
+    }    
+```
+The `Class` argument directly links to the 'Classes' argument in the config file.
+
+The `path` argument can be a single root file, a list of root files, or even a folder but in a tuple format (folder,fileextension), like ('./samples','.root')
+||
+|---|
+|example:``` 'path':['./DY.root','./Zee.root'] ```|
+|example:``` 'path':'./DY.root' ```|
+|example:``` 'path':('/samples/','.root') ```|
+    
+The `xsecwt` argument can be number, branch name or even a branch name with a multiplier factor as well.
+||
+|---|
+|example: ``` 'xsecwt': 1 ```   | 
+|example: ``` 'xsecwt': "weight" ```   |
+|example: ``` 'xsecwt': ("weight",5) ```|
+    
+The `selection` argument will take `&` and `|` for `and` and `or`. You can place selection on branches in the tree. Remember what selection can you place will depend on what branches are in the tree.
+
+### MVAs
+
+MVAs to use. You can add as many as you like: MVAtypes XGB and DNN are keywords, so names can be XGB_new, DNN_old etc, but keep XGB and DNN in the names, **and no space please** ( (That is how the framework identifies which algo to run). Look at the sample config below to see how MVAs are added. At the end of the config adding MVAs in described in much detail.
+    
+<details>
+<summary>Examples</summary>
+    
+```python
+
+MVAs = [
+    #can add as many as you like: For MVAtypes XGB and DNN are keywords, so names can be XGB_new, DNN_old etc.
+    #But keep XGB and DNN in the names (That is how the framework identifies which algo to run
+
+    {"MVAtype":"XGB_1", #Keyword to identify MVA method.
+     "Color":"green", #Plot color for MVA
+     "Label":"XGB try1", # label can be anything (this is how you will identify them on plot legends)
+     "features":["ele_fbrem", "ele_deltaetain", "ele_deltaphiin", "ele_oldsigmaietaieta",
+                 "ele_oldhe", "ele_ep", "ele_olde15", "ele_eelepout"],
+     "feature_bins":[100 , 100, 100, 100, 100, 100, 100, 100], #same length as features
+     #Binning used only for plotting features (should be in the same order as features), does not affect training
+     'Scaler':"MinMaxScaler", #Scaling for features before passing to the model training
+     'UseGPU':True, #If you have a GPU card, you can turn on this option (CUDA 10.0, Compute Capability 3.5 required)
+     "XGBGridSearch":{'min_child_weight': [5], 'max_depth': [2,3,4]} ## multiple values for a parameter will automatically do a grid search
+     #All standard XGB parameters supported
+    },
+
+     {"MVAtype":"DNN_clusteriso_2drwt",#Keyword to identify MVA method.
+     "Color":"black", #Plot color for MVA
+     "Label":"DNN_clusteriso_2drwt", # label can be anything (this is how you will identify them on plot legends)
+     "features":["ele_fbrem", "ele_deltaetain", "ele_deltaphiin", "ele_oldsigmaietaieta",
+                 "ele_oldhe", "ele_ep", "ele_olde15", "ele_eelepout",
+                 "ele_kfchi2", "ele_kfhits", "ele_expected_inner_hits","ele_dr03TkSumPt",
+                 "ele_dr03EcalRecHitSumEt","ele_dr03HcalTowerSumEt","ele_gsfchi2","scl_eta","ele_pt",
+                 'ele_nbrem','ele_deltaetaseed','ele_hadronicOverEm','ele_olde25max','ele_olde55'],
+     "feature_bins":[100 for i in range(22)], #same length as features
+     'Scaler':"MinMaxScaler", #Scaling for features before passing to the model training
+     "DNNDict":{'epochs':10, 'batchsize':100,
+                'model': Sequential([Dense(24, kernel_initializer='glorot_normal', activation='relu'),
+                                     Dense(48, activation="relu"),
+                                     Dense(24, activation="relu"),
+                                     Dropout(0.1),
+                                     Dense(len(Classes),activation="softmax")]),
+                'compile':{'loss':'categorical_crossentropy','optimizer':Adam(lr=0.001), 'metrics':['accuracy']},
+                'earlyStopping': EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=10)
+               }
+    },
+]
+
+```
+</details>
