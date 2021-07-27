@@ -145,9 +145,12 @@ from tensorflow.keras.callbacks import EarlyStopping
 |`Multicore`|boolean| If True all CPU cores available are used XGB | True|
 
 #### How to add more variables (that are a not directly in the trees)? or modify the ones that are in tree
+
 | Function         |Type| Description| Default value|
 | --------------- | ----------------| ---------------- | ---------------- |
-|`modifydf`|function| In your config, you can add a function with this exact name `modifydf` which accepts a pandas dataframe and manipulates it and then returns 0. Using this you can add new variables or modify already present variables. Example: `def modifydf(df): df['A']=df[X]+df[Y]; return 0;` This will add a new branch named 'A'.| Not activated until defined|
+|`modifydf`|function| In your config, you can add a function with this exact name `modifydf` which accepts a pandas dataframe and manipulates it and then returns 0. | Not activated until defined|
+
+Using this you can add new variables or modify already present variables. A very simple example: `def modifydf(df): df['A']=df[X]+df[Y]; return 0;` This will add a new branch named 'A'.
     
  There is a lof things you can do with a modifydf.
 
@@ -194,6 +197,8 @@ def modifydf(df):
                #print(f'Found top at {partind} with pT {row.Gen_pt[partind]} GeV and mother ID {row.Gen_motherpdg_id[partind]} with {row.Gen_numDaught[partind]} daughters')
                df.loc[ind,'GenToppt'] = row.Gen_pt[partind]
                df.loc[ind,'GenTopeta'] = row.Gen_eta[partind] 
+         
+    return 0;
     
 
 
