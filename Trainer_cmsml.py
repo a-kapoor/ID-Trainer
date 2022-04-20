@@ -441,15 +441,15 @@ for MVA in Conf.MVAs:
         if len(Conf.Classes)<3:
             epochs = len(results['validation_0']['error'])
         else:
-            epochs = len(results['validation_0']['merror'])
+            epochs = len(results['validation_0']['mlogloss'])
         x_axis = range(0, epochs)
         fig, ax = plt.subplots(figsize=(5,5))
         if len(Conf.Classes)<3:
             ax.plot(x_axis, results['validation_0']['error'], label='Train')
             ax.plot(x_axis, results['validation_1']['error'], label='Test')
         else:
-            ax.plot(x_axis, results['validation_0']['merror'], label='Train')
-            ax.plot(x_axis, results['validation_1']['merror'], label='Test')
+            ax.plot(x_axis, results['validation_0']['mlogloss'], label='Train')
+            ax.plot(x_axis, results['validation_1']['mlogloss'], label='Test')
         ax.legend()
         ax.set_ylabel('error')
         ax.set_xlabel('epochs')

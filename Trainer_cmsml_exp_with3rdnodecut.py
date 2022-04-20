@@ -811,40 +811,40 @@ if hasattr(Conf, 'SigEffWPs')and len(Conf.SigEffWPs)>0:
             mydftest=EB_test.query(cat+"==0")[[MVA["MVAtype"]+"_pred"]].quantile(SigEffWPs)
 
         
-        EB_train.loc[EB_train[MVA["MVAtype"]+"_pred"] > mydftrain.iat[0,0], MVA["MVAtype"]+"_predpass"] = 1
-        EB_train.loc[EB_train[MVA["MVAtype"]+"_pred"] < mydftrain.iat[0,0], MVA["MVAtype"]+"_predpass"] = 0
-        EB_train.loc[EB_train[MVA["MVAtype"]+"QCD_pred"] > 0.8, MVA["MVAtype"]+"_predpass"] = 0
-
-        EB_train.loc[EB_train[MVA["MVAtype"]+"_pred"] > mydftrain.iat[1,0], MVA["MVAtype"]+"_predpass1"] = 1
-        EB_train.loc[EB_train[MVA["MVAtype"]+"_pred"] < mydftrain.iat[1,0], MVA["MVAtype"]+"_predpass1"] = 0
-        EB_train.loc[EB_train[MVA["MVAtype"]+"QCD_pred"] > 0.8, MVA["MVAtype"]+"_predpass1"] = 0
         
-        EB_test.loc[EB_test[MVA["MVAtype"]+"_pred"] > mydftest.iat[0,0], MVA["MVAtype"]+"_predpass"] = 1
-        EB_test.loc[EB_test[MVA["MVAtype"]+"_pred"] < mydftest.iat[0,0], MVA["MVAtype"]+"_predpass"] = 0
-        EB_test.loc[EB_test[MVA["MVAtype"]+"QCD_pred"] > 0.8, MVA["MVAtype"]+"_predpass"] = 0
-
-        
-        EB_test.loc[EB_test[MVA["MVAtype"]+"_pred"] > mydftest.iat[1,0], MVA["MVAtype"]+"_predpass1"] = 1
-        EB_test.loc[EB_test[MVA["MVAtype"]+"_pred"] < mydftest.iat[1,0], MVA["MVAtype"]+"_predpass1"] = 0
-        EB_test.loc[EB_test[MVA["MVAtype"]+"QCD_pred"] > 0.8, MVA["MVAtype"]+"_predpass"] = 0
         
 
         variables=['ele_pt_bin','ele_eta_bin']
         bins=[Conf.ptbins,Conf.etabins]
         xaxislabels=['$p_T$ (GeV)','$\eta$']
         Wps=Conf.OverlayWP
+        
 
-        for variable,xaxislabel,binn in zip(variables,xaxislabels,bins):
-            EffTrend(cat=cat,var=MVA["MVAtype"]+"_predpass",groupbyvar=variable,ptbins=binn,label=xaxislabel,title=f"At {Conf.SigEffWPs[0]} overall signal efficiency",plotname="New_MultiClass_ID_Val_"+Conf.SigEffWPs[0]+"_"+variable,df=EB_train,plot_dir=Conf.OutputDirName+"/"+MVA["MVAtype"]+"/Train_",Classes=Conf.Classes,Colors=Conf.ClassColors)
-            EffTrend(cat=cat,var=MVA["MVAtype"]+"_predpass1",groupbyvar=variable,ptbins=binn,label=xaxislabel,title=f"At {Conf.SigEffWPs[1]} overall signal efficiency",plotname="New_MultiClass_ID_Val_"+Conf.SigEffWPs[1]+"_"+variable,df=EB_train,plot_dir=Conf.OutputDirName+"/"+MVA["MVAtype"]+"/Train_",Classes=Conf.Classes,Colors=Conf.ClassColors)
-            for Wp in Wps:
-                EffTrend(cat=cat,var=Wp,groupbyvar=variable,ptbins=binn, label=xaxislabel,title='CMSSW_ID_'+Wp,plotname="CMSSW_ID_"+Wp+"_"+variable,df=EB_train,plot_dir=Conf.OutputDirName+"/"+MVA["MVAtype"]+"/Train_",Classes=Conf.Classes,Colors=Conf.ClassColors)
+        for kela in [0.0,0.1,0.6,0.65,0.7,0.75,0.8,0.85,0.95,1.0]:
+            EB_train[MVA["MVAtype"]+"_predpass"]=0
+            EB_train.loc[(EB_train[MVA["MVAtype"]+"_pred"] > mydftrain.iat[0,0]) & (EB_train[MVA["MVAtype"]+"QCD_pred"] < kela), MVA["MVAtype"]+"_predpass"] = 1
+
+            EB_train[MVA["MVAtype"]+"_predpass1"]=0
+            EB_train.loc[(EB_train[MVA["MVAtype"]+"_pred"] > mydftrain.iat[1,0]) & (EB_train[MVA["MVAtype"]+"QCD_pred"] < kela), MVA["MVAtype"]+"_predpass1"] = 1      
+
+            EB_test[MVA["MVAtype"]+"_predpass"]=0
+            EB_test.loc[(EB_test[MVA["MVAtype"]+"_pred"] > mydftest.iat[0,0]) & (EB_test[MVA["MVAtype"]+"QCD_pred"] < kela), MVA["MVAtype"]+"_predpass"] = 1
+
+            EB_test[MVA["MVAtype"]+"_predpass1"]=0
+            EB_test.loc[(EB_test[MVA["MVAtype"]+"_pred"] > mydftest.iat[1,0]) & (EB_test[MVA["MVAtype"]+"QCD_pred"] < kela), MVA["MVAtype"]+"_predpass1"] = 1      
 
 
-            EffTrend(cat=cat,var=MVA["MVAtype"]+"_predpass",groupbyvar=variable,ptbins=binn,label=xaxislabel,title=f"At {Conf.SigEffWPs[0]} overall signal efficiency",plotname="New_MultiClass_ID_Val_"+Conf.SigEffWPs[0]+"_"+variable,df=EB_test,plot_dir=Conf.OutputDirName+"/"+MVA["MVAtype"]+"/Test_",Classes=Conf.Classes,Colors=Conf.ClassColors)
-            EffTrend(cat=cat,var=MVA["MVAtype"]+"_predpass1",groupbyvar=variable,ptbins=binn,label=xaxislabel,title=f"At {Conf.SigEffWPs[1]} overall signal efficiency",plotname="New_MultiClass_ID_Val_"+Conf.SigEffWPs[1]+"_"+variable,df=EB_test,plot_dir=Conf.OutputDirName+"/"+MVA["MVAtype"]+"/Test_",Classes=Conf.Classes,Colors=Conf.ClassColors)
-            for Wp in Wps:
-                EffTrend(cat=cat,var=Wp,groupbyvar=variable,ptbins=binn, label=xaxislabel,title='CMSSW_ID_'+Wp,plotname="CMSSW_ID_"+Wp+"_"+variable,df=EB_test,plot_dir=Conf.OutputDirName+"/"+MVA["MVAtype"]+"/Test_",Classes=Conf.Classes,Colors=Conf.ClassColors)
+            for variable,xaxislabel,binn in zip(variables,xaxislabels,bins):
+                EffTrend(cat=cat,var=MVA["MVAtype"]+"_predpass",groupbyvar=variable,ptbins=binn,label=xaxislabel,title=f"At {Conf.SigEffWPs[0]} overall signal efficiency",plotname="New_MultiClass_ID_Val_"+Conf.SigEffWPs[0]+"_"+variable+"_3rdnodelt_"+str(kela)+"_plot",df=EB_train,plot_dir=Conf.OutputDirName+"/"+MVA["MVAtype"]+"/Train_",Classes=Conf.Classes,Colors=Conf.ClassColors)
+                EffTrend(cat=cat,var=MVA["MVAtype"]+"_predpass1",groupbyvar=variable,ptbins=binn,label=xaxislabel,title=f"At {Conf.SigEffWPs[1]} overall signal efficiency",plotname="New_MultiClass_ID_Val_"+Conf.SigEffWPs[1]+"_"+variable+"_3rdnodelt_"+str(kela)+"_plot",df=EB_train,plot_dir=Conf.OutputDirName+"/"+MVA["MVAtype"]+"/Train_",Classes=Conf.Classes,Colors=Conf.ClassColors)
+                for Wp in Wps:
+                    EffTrend(cat=cat,var=Wp,groupbyvar=variable,ptbins=binn, label=xaxislabel,title='CMSSW_ID_'+Wp,plotname="CMSSW_ID_"+Wp+"_"+variable,df=EB_train,plot_dir=Conf.OutputDirName+"/"+MVA["MVAtype"]+"/Train_",Classes=Conf.Classes,Colors=Conf.ClassColors)
+
+
+                EffTrend(cat=cat,var=MVA["MVAtype"]+"_predpass",groupbyvar=variable,ptbins=binn,label=xaxislabel,title=f"At {Conf.SigEffWPs[0]} overall signal efficiency",plotname="New_MultiClass_ID_Val_"+Conf.SigEffWPs[0]+"_"+variable+"_3rdnodelt_"+str(kela)+"_plot",df=EB_test,plot_dir=Conf.OutputDirName+"/"+MVA["MVAtype"]+"/Test_",Classes=Conf.Classes,Colors=Conf.ClassColors)
+                EffTrend(cat=cat,var=MVA["MVAtype"]+"_predpass1",groupbyvar=variable,ptbins=binn,label=xaxislabel,title=f"At {Conf.SigEffWPs[1]} overall signal efficiency",plotname="New_MultiClass_ID_Val_"+Conf.SigEffWPs[1]+"_"+variable+"_3rdnodelt_"+str(kela)+"_plot",df=EB_test,plot_dir=Conf.OutputDirName+"/"+MVA["MVAtype"]+"/Test_",Classes=Conf.Classes,Colors=Conf.ClassColors)
+                for Wp in Wps:
+                    EffTrend(cat=cat,var=Wp,groupbyvar=variable,ptbins=binn, label=xaxislabel,title='CMSSW_ID_'+Wp,plotname="CMSSW_ID_"+Wp+"_"+variable,df=EB_test,plot_dir=Conf.OutputDirName+"/"+MVA["MVAtype"]+"/Test_",Classes=Conf.Classes,Colors=Conf.ClassColors)
 
 
 # In[33]:
