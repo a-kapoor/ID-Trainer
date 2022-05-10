@@ -176,7 +176,7 @@ else:
     if hasattr(Conf, 'SaveDataFrameCSV'):
         if Conf.SaveDataFrameCSV:
             prGreen("Saving DataFrame : It can take sometime")
-            df_final.to_parquet(Conf.OutputDirName+'/df.parquet.gzip',compression='gzip')
+            #df_final.to_parquet(Conf.OutputDirName+'/df.parquet.gzip',compression='gzip')
 
 
 # In[14]:
